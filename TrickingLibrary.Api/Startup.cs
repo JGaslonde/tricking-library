@@ -12,14 +12,17 @@ namespace TrickingLibrary.Api
 {
     public class Startup
     {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+        private const string AllCors = "All";
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddCors(options =>
+                                 options.AddPolicy(AllCors,build =>
+                                                              build.AllowAnyHeader()
+                                                                   .AllowAnyOrigin()
+                                                                   .AllowAnyMethod()));
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -27,6 +30,8 @@ namespace TrickingLibrary.Api
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors(AllCors);
+            
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
